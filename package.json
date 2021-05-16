@@ -1,0 +1,25 @@
+{
+  "name": "team-manager",
+  "version": "1.0.0",
+  "description": "CLI for database management. Link to repo is [here](https://github.com/japankid-code/team-manager)",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/japankid-code/team-manager.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/japankid-code/team-manager/issues"
+  },
+  "homepage": "https://github.com/japankid-code/team-manager#readme",
+  "dependencies": {
+    "console.table": "^0.10.0",
+    "inquirer": "^8.0.0",
+    "mysql2": "^2.2.5"
+  }
+}
