@@ -1,5 +1,6 @@
 const inquirer = require('inquirer');
 const db = require('./db/connection.js');
+const cTable = require('console.table');
 const { 
   getDepartments,
   getRoles,
@@ -11,16 +12,16 @@ const inquireBonus = () => {
 }
 
 const inquire = () => {
-  console.log(`Welcome to the Team Manager !!`);
+  
   const questions = [
     {
       type: 'list',
       name: 'action',
       message: 'What would you like to do?',
       choices: [
+        'view all employees',
         'view all departments',
         'view all roles',
-        'view all employees',
         'add a department',
         'add a role',
         'add an employee',
@@ -199,21 +200,37 @@ const inquire = () => {
       switch(answers.action) {
         case 'view all employees': {
           getEmployees();
+          break;
         }
         case 'view all departments': {
           getDepartments();
+          break;
         }
         case 'view all roles': {
           getRoles();
+          break;
+        }
+        case 'add a department': {
+          break;
+        }
+        case 'add a role': {
+          break;
+        }
+        case 'add an employee': {
+          break;
+        }
+        case 'update an employee role': {
+          break;
         }
         case 'advanced options': {
           inquireBonus();
+          break;
         }
         case 'quit': {
-          process.exit();
+          process.exit()
         }
       }
-      return;
+      inquire();
     })
     .catch(error => {
       if(error.isTtyError) {
@@ -224,4 +241,5 @@ const inquire = () => {
     });
 }
 
+console.log(`Welcome to the Team Manager !!`);
 inquire();
