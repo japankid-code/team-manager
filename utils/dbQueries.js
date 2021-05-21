@@ -54,7 +54,8 @@ on r.department_id = d.d_id;`;
 // add an employee
 const addEmployee = (first, last, role, boss) => {
   const sql = `INSERT INTO employees (first_name, last_name, role_id, manager_id)
-  VALUES (${first}, ${last}, ${role}, ${boss});`;
+VALUES 
+  ('${first}', '${last}', ${role}, ${boss});`;
   db.promise().query(sql)
     .then( ([rows,fields]) => {
       console.log(`\n`);
