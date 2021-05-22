@@ -1,34 +1,25 @@
 const db = require('../db/connection');
 
 const rolesList = () => {
-  const sql = `SELECT role_id FROM employees
-LEFT JOIN roles;`;
-  db.promise.query(sql)
-    .then( ([rows,fields]) => {
-      console.table(rows)
-    })
+  const sql = `SELECT r_id, role_title FROM roles`;
+  return db.promise().query(sql)
 }
 
 const managerList = () => {
-  console.log(`rows`)
-  const sql = `SELECT 
+  const sql = `SELECT DISTINCT
+  m.e_id,
   m.first_name,
   m.last_name
 FROM employees e
 JOIN employees m
 ON e.manager_id = m.e_id;`;
-  db.promise.query(sql)
-    .then( ([rows,fields]) => {
-      console.log(`\n`);
-      console.log(rows);
-    })
+  return db.promise().query(sql);
 }
-
 
 // view all employees
 const renderEmployees = () => {
   const sql = `SELECT
-  +e.e_id AS ID,
+  e.e_id AS ID,
   e.first_name AS 'First',
   e.last_name AS 'Last',
   d.department_name AS 'Department',
@@ -71,7 +62,7 @@ on r.department_id = d.d_id;`;
   db.promise().query(sql)
     .then( ([rows,fields]) => {
       console.log(`\n`);
-      console.log(rows);
+      console.table(rows);
     })
     .catch(console.log)
     .then( () => console.log("anything else?"));
@@ -83,12 +74,8 @@ const addEmployee = (first, last, role, boss) => {
 VALUES 
   ('${first}', '${last}', ${role}, ${boss});`;
   db.promise().query(sql)
-    .then( ([rows,fields]) => {
-      console.log(`\n`);
-      console.table(rows);
-    })
-    .catch(console.log)
-    .then( () => console.log("anything else?"));
+    .then( ([rows,fields]) => console.log('employee added!'))
+    .catch(err => console.log(err))
 };
 
 // add a department
