@@ -2,7 +2,7 @@ const db = require('../db/connection');
 
 const rolesList = () => {
   const sql = `SELECT r_id, role_title FROM roles`;
-  return db.promise().query(sql)
+  return db.promise().query(sql).catch(err => console.log(err));
 }
 
 const managerList = () => {
@@ -13,7 +13,7 @@ const managerList = () => {
 FROM employees e
 JOIN employees m
 ON e.manager_id = m.e_id;`;
-  return db.promise().query(sql);
+  return db.promise().query(sql).catch(err => console.log(err));
 }
 
 // view all employees
@@ -35,8 +35,7 @@ on r.department_id = d.d_id;`;
       console.log(`\n`);
       console.table(rows);
     })
-    .catch(console.log)
-    .then( () => console.log("anything else?"));
+    .catch(err => console.log(err))
 }
 
 // view all departments
@@ -47,8 +46,7 @@ const renderDepartments = () => {
       console.log(`\n`);
       console.table(rows);
     })
-    .catch(console.log)
-    .then( () => console.log("anything else?"));
+    .catch(err => console.log(err))
 }
 // view all roles 
 const renderRoles = () => {
@@ -64,8 +62,7 @@ on r.department_id = d.d_id;`;
       console.log(`\n`);
       console.table(rows);
     })
-    .catch(console.log)
-    .then( () => console.log("anything else?"));
+    .catch(err => console.log(err))
 }
 
 // add an employee
@@ -74,34 +71,29 @@ const addEmployee = (first, last, role, boss) => {
 VALUES 
   ('${first}', '${last}', ${role}, ${boss});`;
   db.promise().query(sql)
-    .then( ([rows,fields]) => console.log('employee added!'))
+    .then( ([rows,fields]) => console.log('Employee added!'))
     .catch(err => console.log(err))
 };
 
 // add a department
 const addDepartment = (department) => {
   const sql = `INSERT INTO departments (department_name)
-  VALUES (${department});`;
+  VALUES ('${department}');`;
   db.promise().query(sql)
-    .then( ([rows,fields]) => {
-      console.log(`\n`);
-      console.table(rows);
-    })
-    .catch(console.log)
-    .then( () => console.log("anything else?"));
+    .then( ([rows,fields]) => console.log('Department added!'))
+    .catch(err => console.log(err))
 };
 
 // add a role
 const addRole = (role, salary, department) => {
   const sql = `INSERT INTO roles (role_title, salary, department_id)
-  VALUES (${role}, ${salary}, ${department}),`;
+  VALUES ('${role}', ${salary}, ${department}),`;
   db.promise().query(sql)
     .then( ([rows,fields]) => {
       console.log(`\n`);
       console.table(rows);
     })
-    .catch(console.log)
-    .then( () => console.log("anything else?"));
+    .catch(err => console.log(err))
 };
 
 // update an employee role
@@ -112,8 +104,7 @@ const updateEmployeeRole = () => {
       console.log(`\n`);
       console.table(rows);
     })
-    .catch(console.log)
-    .then( () => console.log("anything else?"));
+    .catch(err => console.log(err))
 };
 
 module.exports = { 

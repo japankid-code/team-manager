@@ -42,6 +42,22 @@ const addEmployeeQuestions = (roles, managers) => {
   return questions;
 }
 
+const addDepartmentQuestions = [
+  {
+    type: 'input',
+    name: 'addDepartment',
+    message: 'What is the name of the department you want to add?',
+    validate: addDepartment => {
+      if  (addDepartment) {
+          return true;
+      } else {
+          console.log('Please enter the department name!');
+          return false;
+      }
+    }
+  }
+]
+
 const actionQuestions = [
   {
     type: 'list',
@@ -59,22 +75,7 @@ const actionQuestions = [
       'quit'
     ]
   },
-  {
-    when: ({ action }) => {
-      if (action === 'add a department') {return true} else {return false}
-    },
-    type: 'input',
-    name: 'addDepartment',
-    message: 'What is the name of the department you want to add?',
-    validate: addDepartment => {
-      if  (addDepartment) {
-          return true;
-      } else {
-          console.log('Please enter the department name!');
-          return false;
-      }
-    },
-  },
+  
   {
     when: ({ action }) => {
       if (action === 'add a role') {return true} else {return false}
@@ -133,4 +134,4 @@ const actionQuestions = [
   },
 ]
 
-module.exports = { actionQuestions, addEmployeeQuestions };
+module.exports = { actionQuestions, addEmployeeQuestions, addDepartmentQuestions };

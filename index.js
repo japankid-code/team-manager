@@ -1,6 +1,10 @@
 const inquirer = require('inquirer');
 const cTable = require('console.table');
-const { actionQuestions, addEmployeeQuestions } = require('./utils/questions')
+const { 
+  actionQuestions,
+  addEmployeeQuestions,
+  addDepartmentQuestions
+} = require('./utils/questions')
 const {
   rolesList,
   managerList,
@@ -13,20 +17,6 @@ const {
   updateEmployeeRole
 } = require('./utils/dbQueries');
 
-// basic prompt for inquirer noted out here :)
-// const questions = [{...}, {...}];
-// inquirer.prompt(questions)
-//     .then(answers => {
-//       console.log(answers);
-//     })
-//     .catch(error => {
-//       if(error.isTtyError) {
-//         // Prompt couldn't be rendered in the current environment
-//       } else {
-//         // Something else went wrong
-//       }
-//     });
-
 const inquireBonus = () => {
   console.log("Bonus actions coming soon!!");
 }
@@ -38,13 +28,11 @@ const inqAddEmployee = (roles, managers) => {
     .then(answers => {
       let first = answers.addEmployeeFirst;
       let last = answers.addEmployeeLast;
-      
+      // split  and parse to get the id from user choice
       let role = parseInt(answers.addEmployeeRole.split("|")[0].trim());
-
       // split to get the id from user choice
       let boss = parseInt(answers.addEmployeeManager.split("|")[0].trim());
       addEmployee(first, last, role, boss);
-      console.log('anything else?');
       inquireAction();
     })
     .catch(error => {
@@ -54,6 +42,15 @@ const inqAddEmployee = (roles, managers) => {
         // Something else went wrong
       }
     });
+}
+
+const inqAddDepartment = () => {
+  inquirer.prompt(addDepartmentQuestions)
+    .then(answers => {
+      let depName = answers.addDepartment;
+      addDepartment(depName);
+      inquireAction();
+    })
 }
 
 const inquireAction = () => {
@@ -85,7 +82,7 @@ const inquireAction = () => {
         inqAddEmployee(roles, managers);
       }
       else if (answers.action === 'add a department') {
-        addDepartment();
+        inqAddDepartment();
       }
       else if (answers.action === 'add a role') {
         addRole();
