@@ -3,9 +3,11 @@ const cTable = require('console.table');
 const { 
   actionQuestions,
   addEmployeeQuestions,
-  addDepartmentQuestions
+  addDepartmentQuestions,
+  addRoleQuestions
 } = require('./utils/questions')
 const {
+  departmentList,
   rolesList,
   managerList,
   renderDepartments,
@@ -26,12 +28,12 @@ const inqAddEmployee = (roles, managers) => {
   // use the arrays passed in to list managers and roles during prompt
   inquirer.prompt(questions)
     .then(answers => {
-      let first = answers.addEmployeeFirst;
-      let last = answers.addEmployeeLast;
+      const first = answers.addEmployeeFirst;
+      const last = answers.addEmployeeLast;
       // split  and parse to get the id from user choice
-      let role = parseInt(answers.addEmployeeRole.split("|")[0].trim());
+      const role = parseInt(answers.addEmployeeRole.split("|")[0].trim());
       // split to get the id from user choice
-      let boss = parseInt(answers.addEmployeeManager.split("|")[0].trim());
+      const boss = parseInt(answers.addEmployeeManager.split("|")[0].trim());
       addEmployee(first, last, role, boss);
       inquireAction();
     })
@@ -47,8 +49,20 @@ const inqAddEmployee = (roles, managers) => {
 const inqAddDepartment = () => {
   inquirer.prompt(addDepartmentQuestions)
     .then(answers => {
-      let depName = answers.addDepartment;
+      const depName = answers.addDepartment;
       addDepartment(depName);
+      inquireAction();
+    })
+}
+
+const inqAddRole = (departments) => {
+  const questions = addRoleQuestions(departments);
+  inquirer.prompt(questions)
+    .then(answers => {
+      const title = answers.addRoleTitle;
+      const salary =  answers.addRoleSalary;
+      const department = parseInt(answers.addRoleDepartment.split("|")[0].trim());
+      addRole(title, salary, department);
       inquireAction();
     })
 }
@@ -85,7 +99,12 @@ const inquireAction = () => {
         inqAddDepartment();
       }
       else if (answers.action === 'add a role') {
-        addRole();
+        // grab list of departments with query and
+        const departmentQuery = await departmentList();
+        const departments = departmentQuery[0].map((row) => {
+          return `${row.d_id} | ${row.department_name}`;
+        })
+        inqAddRole(departments);
       }
       else if (answers.action === 'update an employee role') {
         updateEmployeeRole();

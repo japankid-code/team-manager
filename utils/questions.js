@@ -58,6 +58,44 @@ const addDepartmentQuestions = [
   }
 ]
 
+const addRoleQuestions = (departments) => {
+  const questions = [
+    {
+      type: 'input',
+      name: 'addRoleTitle',
+      message: 'What is the title of the role you would like to add?',
+      validate: addRoleTitle => {
+        if  (addRoleTitle) {
+            return true;
+        } else {
+            console.log('Please enter the role title!');
+            return false;
+        }
+      },
+    },
+    {
+      type: 'input',
+      name: 'addRoleSalary',
+      message: 'What is the projected salary of the role you would like to add?',
+      validate: addRoleSalary => {
+        if  (addRoleSalary) {
+            return true;
+        } else {
+            console.log('Please enter the role salary amount!');
+            return false;
+        }
+      },
+    },
+    {
+      type: 'list',
+      name: 'addRoleDepartment',
+      message: 'Which department do you want to add the role to?',
+      choices: departments
+    }
+  ];
+  return questions
+}
+
 const actionQuestions = [
   {
     type: 'list',
@@ -75,43 +113,6 @@ const actionQuestions = [
       'quit'
     ]
   },
-  
-  {
-    when: ({ action }) => {
-      if (action === 'add a role') {return true} else {return false}
-    },
-    type: 'input',
-    name: 'addRoleTitle',
-    message: 'What is the title of the role you would like to add?',
-    validate: addRoleTitle => {
-      if  (addRoleTitle) {
-          return true;
-      } else {
-          console.log('Please enter the role title!');
-          return false;
-      }
-    },
-  },
-    {
-      when: ({ addRoleTitle }) => {
-        if (addRoleTitle) {
-          return true;
-        } else {
-          return false;
-        }
-      },
-      type: 'input',
-      name: 'addRoleSalary',
-      message: 'What is the projected salary of the role you would like to add?',
-      validate: addRoleSalary => {
-        if  (addRoleSalary && typeof addRoleTitle === 'number') {
-            return true;
-        } else {
-            console.log('Please enter the role salary amount!');
-            return false;
-        }
-      },
-    },
   {
     type: 'input', // this could be list, query database for the list
     name: 'updateEmployeeRole',
@@ -134,4 +135,9 @@ const actionQuestions = [
   },
 ]
 
-module.exports = { actionQuestions, addEmployeeQuestions, addDepartmentQuestions };
+module.exports = { 
+  actionQuestions,
+  addEmployeeQuestions,
+  addDepartmentQuestions,
+  addRoleQuestions
+};

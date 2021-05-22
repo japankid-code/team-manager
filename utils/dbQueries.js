@@ -1,5 +1,10 @@
 const db = require('../db/connection');
 
+const departmentList = () => {
+  const sql = `SELECT d_id, department_name FROM departments`
+  return db.promise().query(sql).catch(err => console.log(err));
+}
+
 const rolesList = () => {
   const sql = `SELECT r_id, role_title FROM roles`;
   return db.promise().query(sql).catch(err => console.log(err));
@@ -85,14 +90,11 @@ const addDepartment = (department) => {
 };
 
 // add a role
-const addRole = (role, salary, department) => {
+const addRole = (title, salary, department) => {
   const sql = `INSERT INTO roles (role_title, salary, department_id)
-  VALUES ('${role}', ${salary}, ${department}),`;
+  VALUES ('${title}', ${salary}, ${department});`;
   db.promise().query(sql)
-    .then( ([rows,fields]) => {
-      console.log(`\n`);
-      console.table(rows);
-    })
+    .then( ([rows,fields]) => console.log(`Role added!`))
     .catch(err => console.log(err))
 };
 
@@ -108,6 +110,7 @@ const updateEmployeeRole = () => {
 };
 
 module.exports = { 
+  departmentList,
   rolesList,
   managerList,
   renderDepartments,
