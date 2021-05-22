@@ -59,7 +59,7 @@ For more information, please refer to <https://unlicense.org>
 
 ## Contributing
 
-nothing to shout out.
+thanks to [this guide](https://learnsql.com/blog/what-is-self-join-sql/) for help on self joins!!
 
 ## Tests
 

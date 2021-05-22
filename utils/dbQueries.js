@@ -1,8 +1,34 @@
 const db = require('../db/connection');
 
+const rolesList = () => {
+  const sql = `SELECT role_id FROM employees
+LEFT JOIN roles;`;
+  db.promise.query(sql)
+    .then( ([rows,fields]) => {
+      console.table(rows)
+    })
+}
+
+const managerList = () => {
+  console.log(`rows`)
+  const sql = `SELECT 
+  m.first_name,
+  m.last_name
+FROM employees e
+JOIN employees m
+ON e.manager_id = m.e_id;`;
+  db.promise.query(sql)
+    .then( ([rows,fields]) => {
+      console.log(`\n`);
+      console.log(rows);
+    })
+}
+
+
 // view all employees
 const renderEmployees = () => {
   const sql = `SELECT
+  +e.e_id AS ID,
   e.first_name AS 'First',
   e.last_name AS 'Last',
   d.department_name AS 'Department',
@@ -45,7 +71,7 @@ on r.department_id = d.d_id;`;
   db.promise().query(sql)
     .then( ([rows,fields]) => {
       console.log(`\n`);
-      console.table(rows);
+      console.log(rows);
     })
     .catch(console.log)
     .then( () => console.log("anything else?"));
@@ -104,6 +130,8 @@ const updateEmployeeRole = () => {
 };
 
 module.exports = { 
+  rolesList,
+  managerList,
   renderDepartments,
   renderRoles,
   renderEmployees,

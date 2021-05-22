@@ -14,6 +14,7 @@ const {
 } = require('./utils/dbQueries');
 
 // basic prompt for inquirer noted out here :)
+// const questions = [{...}, {...}];
 // inquirer.prompt(questions)
 //     .then(answers => {
 //       console.log(answers);
@@ -32,8 +33,7 @@ const inquireBonus = () => {
 
 const inqAddEmployee = (roles, managers) => {
   // use the arrays passed in to list managers and roles during prompt
-  console.log(roles, managers);
-  questions = [
+  const questions = [
     {
       type: 'input',
       name: 'addEmployeeFirst',
@@ -61,54 +61,40 @@ const inqAddEmployee = (roles, managers) => {
       },
     },
     {
-      type: 'input',
+      when: ({ addEmployeeLast }) => {
+        if (addEmployeeLast) {return true} else {return false}
+      },
+      type: 'list',
       name: 'addEmployeeRole',
       message: 'What is the role of this employee?',
-      validate: addEmployeeRole => {
-        if  (addEmployeeRole) {
-            return true;
-        } else {
-            console.log("Please enter the employee's role!");
-            return false;
-        }
-      },
+      choices: [1, 2]
     },
     {
-      type: 'input', // this could be list, query database for the list
+      type: 'list', // query database for the list
       name: 'addEmployeeManager', // query would only grab managers
       message: 'To whom does the employee report?',
-      validate: addEmployeeManager => {
-        if  (addEmployeeManager) {
-            return true;
-        } else {
-            console.log("Please enter the employee's manager!");
-            return false;
-        }
-      },
+      choices: [1, 2, 3]
     },
   ]
 
-  let first = 'Jake'; // answers.addEmployeeFirst;
-  let last = 'Rankin'; // answers.addEmployeeLast;
-  let role = 1; // answers.addEmployeeRole;
-  let boss = 2; // answers.addEmployeeManager;
-  addEmployee(first, last, role, boss);
-  // inquirer.prompt(questions)
-  //   .then(answers => {
-  //     console.log(answers);
-  //     let first = 'first';// answers.addEmployeeFirst;
-  //     let last = 'last';// answers.addEmployeeLast;
-  //     let role = 'role';// answers.addEmployeeRole;
-  //     let boss = 'boss';// answers.addEmployeeManager;
-  //     addEmployee(first, last, role, boss)
-  //   })
-  //   .catch(error => {
-  //     if(error.isTtyError) {
-  //       // Prompt couldn't be rendered in the current environment
-  //     } else {
-  //       // Something else went wrong
-  //     }
-  //   });
+  inquirer.prompt(questions)
+    .then(answers => {
+      console.log(answers);
+      let first = answers.addEmployeeFirst;
+      let last = answers.addEmployeeLast;
+      let role = answers.addEmployeeRole;
+      let boss = answers.addEmployeeManager;
+      addEmployee(first, last, role, boss);
+      console.log('anything else?')
+      inquire();
+    })
+    .catch(error => {
+      if(error.isTtyError) {
+        // Prompt couldn't be rendered in the current environment
+      } else {
+        // Something else went wrong
+      }
+    });
 }
 
 const inquire = () => {
@@ -131,11 +117,7 @@ const inquire = () => {
     },
     {
       when: ({ action }) => {
-        if (action === 'add a department') {
-          return true;
-        } else {
-          return false;
-        }
+        if (action === 'add a department') {return true} else {return false}
       },
       type: 'input',
       name: 'addDepartment',
@@ -151,11 +133,7 @@ const inquire = () => {
     },
     {
       when: ({ action }) => {
-        if (action === 'add a role') {
-          return true;
-        } else {
-          return false;
-        }
+        if (action === 'add a role') {return true} else {return false}
       },
       type: 'input',
       name: 'addRoleTitle',
@@ -214,50 +192,38 @@ const inquire = () => {
   inquirer.prompt(questions)
     .then(answers => {
       console.log(answers)
-      
       // use feedbacks here in the switch
-      switch(answers.action) {
-        case 'view all employees': {
-          renderEmployees();
-          break;
-        }
-        case 'view all departments': {
-          renderDepartments();
-          break;
-        }
-        case 'view all roles': {
-          renderRoles();
-          break;
-        }
-        case 'add a department': {
-          addDepartment();
-          break;
-        }
-        case 'add a role': {
-          addRole();
-          break;
-        }
-        case 'add an employee': {
-          // need a function to get an arr of roles and an arr of managers
-          console.log('add employee?')
-          let roles = ['thespian'];// rolesList;
-          let managers = ['Mandy'];// managerList;
-          inqAddEmployee(roles, managers);
-          break;
-        }
-        case 'update an employee role': {
-          updateEmployeeRole();
-          break;
-        }
-        case 'advanced options': {
-          inquireBonus();
-          break;
-        }
-        case 'quit': {
-          process.exit()
-        }
+      if (answers.action === 'view all employees') {
+        renderEmployees();
       }
-      inquire();
+      else if (answers.action === 'view all departments') {
+        renderDepartments();
+      }
+      else if (answers.action === 'view all roles') {
+        renderRoles();
+      }
+      else if (answers.action === 'add an employee') {
+        // need a function to get an arr of roles and an arr of managers
+        console.log('add employee?')
+        let roles = 1// rolesList;
+        let managers = 1// managerList();
+        inqAddEmployee(roles, managers);
+      }
+      else if (answers.action === 'add a department') {
+        addDepartment();
+      }
+      else if (answers.action === 'add a role') {
+        addRole();
+      }
+      else if (answers.action === 'update an employee role') {
+        updateEmployeeRole();
+      }
+      else if (answers.action === 'advanced options') {
+        inquireBonus();
+      }
+      else if (answers.action === 'quit') {
+        process.exit()
+      }
     })
     .catch(error => {
       if(error.isTtyError) {
@@ -268,5 +234,9 @@ const inquire = () => {
     });
 }
 
-console.log(`Welcome to the Team Manager !!`);
-inquire();
+const init = () => {
+  console.log(`Welcome to the Team Manager !!`);
+  inquire();
+}
+
+init();
