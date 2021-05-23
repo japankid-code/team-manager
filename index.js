@@ -4,9 +4,12 @@ const {
   actionQuestions,
   addEmployeeQuestions,
   addDepartmentQuestions,
-  addRoleQuestions
-} = require('./utils/questions')
+  addRoleQuestions,
+  updateEmpRoleQuestions
+} = require('./utils/questions');
+
 const {
+  employeeList,
   departmentList,
   rolesList,
   managerList,
@@ -21,6 +24,7 @@ const {
 
 const inquireBonus = () => {
   console.log("Bonus actions coming soon!!");
+  inquireAction();
 }
 
 const inqAddEmployee = (roles, managers) => {
@@ -40,8 +44,8 @@ const inqAddEmployee = (roles, managers) => {
     .catch(error => {
       if(error.isTtyError) {
         // Prompt couldn't be rendered in the current environment
-      } else {
-        // Something else went wrong
+      } {
+        // Something went wrong
       }
     });
 }
@@ -67,60 +71,78 @@ const inqAddRole = (departments) => {
     })
 }
 
+const inqUpdateEmpRole = (employees, roles) => {
+  const questions = updateEmpRoleQuestions(employees, roles);
+  inquirer.prompt(questions)
+    .then(answers => {
+      const employee = parseInt(answers.employee.split("|")[0].trim());
+      const role = parseInt(answers.role.split("|")[0].trim());
+      updateEmployeeRole(employee, role);
+      inquireAction();
+    })
+}
+
 const inquireAction = () => {
   // primary prompt for database interaction
   inquirer.prompt(actionQuestions)
-    .then(async (answers) => {
-      if (answers.action === 'view all employees') {
-        renderEmployees();
-        inquireAction();
-      }
-      else if (answers.action === 'view all departments') {
-        renderDepartments();
-        inquireAction();
-      }
-      else if (answers.action === 'view all roles') {
-        renderRoles();
-        inquireAction();
-      }
-      else if (answers.action === 'add an employee') {
-        // need a function to get an arr of roles and an arr of managers
-        const rolesQuery = await rolesList();
-        const roles = rolesQuery[0].map((row) => {
-          return `${row.r_id} | ${row.role_title}`;
-        })
-        const managerQuery = await managerList();
-        const managers = managerQuery[0].map((row) => {
-          return `${row.e_id} | ${row.first_name} ${row.last_name}`;
-        })
-        inqAddEmployee(roles, managers);
-      }
-      else if (answers.action === 'add a department') {
-        inqAddDepartment();
-      }
-      else if (answers.action === 'add a role') {
-        // grab list of departments with query and
-        const departmentQuery = await departmentList();
-        const departments = departmentQuery[0].map((row) => {
-          return `${row.d_id} | ${row.department_name}`;
-        })
-        inqAddRole(departments);
-      }
-      else if (answers.action === 'update an employee role') {
-        updateEmployeeRole();
-      }
-      else if (answers.action === 'advanced options') {
-        inquireBonus();
-      }
-      else if (answers.action === 'quit') {
-        process.exit()
+    .then(async (answers) => {      
+      const rolesQuery = await rolesList();
+      const roles = rolesQuery[0].map((row) => {
+        return `${row.r_id} | ${row.role_title}`;
+      })
+      const managerQuery = await managerList();
+      const managers = managerQuery[0].map((row) => {
+        return `${row.e_id} | ${row.first_name} ${row.last_name}`;
+      })
+      const departmentQuery = await departmentList();
+      const departments = departmentQuery[0].map((row) => {
+        return `${row.d_id} | ${row.department_name}`;
+      })
+      const employeeQuery = await employeeList();
+      const employees = employeeQuery[0].map((row) => {
+        return `${row.e_id} | ${row.first_name} ${row.last_name}`
+      })
+      switch (answers.action) {
+        case 'view all employees': 
+          renderEmployees();
+          inquireAction();
+          break;
+        case 'view all departments':
+          renderDepartments();
+          inquireAction();
+          break;
+        case 'view all roles':
+          renderRoles();
+          inquireAction();
+          break;
+        case 'add an employee':
+          // need a function to get an arr of roles and an arr of managers
+          inqAddEmployee(roles, managers);
+          break;
+        case 'add a department': 
+          inqAddDepartment();
+          break;
+        case 'add a role':
+          // grab list of departments with query and
+          inqAddRole(departments);
+          break;
+        case 'update an employee role': 
+          // get list of employess  etc.
+          inqUpdateEmpRole(employees, roles);
+          break;
+        case 'advanced options':
+          inquireBonus();
+          inquire();
+          break;
+        case 'quit':
+          process.exit();
       }
     })
     .catch(error => {
       if(error.isTtyError) {
         // Prompt couldn't be rendered in the current environment
-      } else {
-        // Something else went wrong
+      } {
+        // Something went wrong
       }
     });
 }

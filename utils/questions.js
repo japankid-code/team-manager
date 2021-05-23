@@ -96,6 +96,24 @@ const addRoleQuestions = (departments) => {
   return questions
 }
 
+const updateEmpRoleQuestions = (employees, roles) => {
+  const questions = [
+    {
+      type: 'list',
+      name: 'employee',
+      message: 'which employee would you like to update?',
+      choices: employees
+    },
+    {
+      type: 'list',
+      name: 'role',
+      message: 'which role would you like the employee to have?',
+      choices: roles
+    }
+  ]
+  return questions;
+}
+
 const actionQuestions = [
   {
     type: 'list',
@@ -112,32 +130,13 @@ const actionQuestions = [
       'advanced options',
       'quit'
     ]
-  },
-  {
-    type: 'input', // this could be list, query database for the list
-    name: 'updateEmployeeRole',
-    message: 'What is the name of the employee whose role you would like to update?',
-    when: ({ action }) => {
-      if (action === 'update an employee role') {
-        return true;
-      } else {
-        return false;
-      }
-    },
-    validate: updateEmployeeRole => {
-      if  (updateEmployeeRole) {
-          return true;
-      } else {
-          console.log('Please enter the employee title!');
-          return false;
-      }
-    },
-  },
+  }
 ]
 
 module.exports = { 
   actionQuestions,
   addEmployeeQuestions,
   addDepartmentQuestions,
-  addRoleQuestions
+  addRoleQuestions,
+  updateEmpRoleQuestions
 };

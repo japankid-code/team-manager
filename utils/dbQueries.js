@@ -1,5 +1,10 @@
 const db = require('../db/connection');
 
+const employeeList = () => {
+  const sql = 'SELECT e_id, first_name, last_name FROM employees;';
+  return db.promise().query(sql).catch(err => console.log(err));
+}
+
 const departmentList = () => {
   const sql = `SELECT d_id, department_name FROM departments`
   return db.promise().query(sql).catch(err => console.log(err));
@@ -99,17 +104,17 @@ const addRole = (title, salary, department) => {
 };
 
 // update an employee role
-const updateEmployeeRole = () => {
-  const sql = `ALTER TABLE employees`;
+const updateEmployeeRole = (id, role) => {
+  const sql = `UPDATE employees
+SET role_id = ${role}
+WHERE e_id = ${id}`;
   db.promise().query(sql)
-    .then( ([rows,fields]) => {
-      console.log(`\n`);
-      console.table(rows);
-    })
+    .then( ([rows,fields]) => console.log('Employeed role updated!'))
     .catch(err => console.log(err))
 };
 
-module.exports = { 
+module.exports = {
+  employeeList,
   departmentList,
   rolesList,
   managerList,
