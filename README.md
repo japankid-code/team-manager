@@ -28,7 +28,7 @@ source db/schema.sql
 source db/seeds.sql
 ```
 
-install node dependencies and run the app!
+install node dependencies and run the app! But don't forget to update your credentials in `db/connection.js`
 
 ```bash
 npm i
