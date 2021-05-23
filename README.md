@@ -15,18 +15,31 @@ CLI for database management. Link to repo is [here](https://github.com/japankid-
 
 ## Installation
 
-First of all, install [node](https://nodejs.org/en/).
-Here are the list of commands used to get the application working:
+First of all, make sure you have [node](https://nodejs.org/en/) and [MySQL](https://dev.mysql.com/downloads/mysql/) installed. Enter the mysql shell through the terminal:
+
+```bash
+mysql -u root -p
+```
+
+create and seed the database and tables in the MySQL shell:
+
+```SQL
+source db/schema.sql
+source db/seeds.sql
+```
+
+install node dependencies and run the app!
 
 ```bash
 npm i
-npm start
+node index.js
 ```
 
 ## Usage
 
-uses MySQL and inquirer
-Don't forget to add images!
+Uses MySQL and inquirer for an interactive database management experience.
+
+![shot of app in the terminal](./team-manager.png)
 
 ## License
 
@@ -68,6 +81,7 @@ no testing procedures/coverage.
 ## Questions
 
 email: japankid.jake@gmail.com
+
 [Github profile](https://github.com/japankid-code).
 
 If your project has a lot of features, consider adding a "Features" section.
